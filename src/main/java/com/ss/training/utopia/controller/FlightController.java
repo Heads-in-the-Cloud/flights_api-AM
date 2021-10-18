@@ -1,5 +1,6 @@
 package com.ss.training.utopia.controller;
 
+import com.ss.training.utopia.dto.FlightDto;
 import com.ss.training.utopia.entity.Flight;
 import com.ss.training.utopia.service.FlightService;
 import org.springframework.http.ResponseEntity;
@@ -30,22 +31,19 @@ public class FlightController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Flight> getFlightById(@PathVariable int id) {
-        return ResponseEntity.of(service.getById(id));
+        return ResponseEntity.of(Optional.ofNullable(service.getById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<Flight> addFlight(@RequestBody Flight flight) {
-        service.add(flight);
+    public ResponseEntity<Flight> addFlight(@RequestBody FlightDto flightDto) {
+        Flight flight = service.add(flightDto);
         URI uri = URI.create("/api/v1/flights/" + flight.getId());
         return ResponseEntity.created(uri).body(flight);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flight> updateFlight(@RequestBody Flight flight) {
-        Optional<Flight> old = service.getById(flight.getId());
-        if (old.isEmpty())
-            return ResponseEntity.badRequest().build();
-        service.update(flight);
+    public ResponseEntity<Flight> updateFlight(@RequestBody FlightDto flightDto) {
+        service.update(flightDto);
         return ResponseEntity.noContent().build();
     }
 

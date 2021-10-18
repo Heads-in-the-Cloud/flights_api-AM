@@ -1,8 +1,17 @@
 package com.ss.training.utopia.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "airplane_type")
 public class AirplaneType {
 
@@ -13,21 +22,4 @@ public class AirplaneType {
 
     @Column(name = "max_capacity")
     private Integer maxCapacity;
-
-    // GET
-    public Integer getId() {
-        return id;
-    }
-    public Integer getMaxCapacity() {
-        return maxCapacity;
-    }
-
-    // SET
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public void setMaxCapacity(Integer maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
-
 }

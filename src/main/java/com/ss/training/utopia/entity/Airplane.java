@@ -1,8 +1,17 @@
 package com.ss.training.utopia.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "airplane")
 public class Airplane {
 
@@ -14,13 +23,4 @@ public class Airplane {
     @ManyToOne
     @JoinColumn(name="type_id")
     private AirplaneType airplaneType;
-
-    // GET
-    public Integer getId() { return id; }
-    public AirplaneType getAirplaneType() { return airplaneType; }
-
-    // SET
-    public void setId(Integer id) { this.id = id; }
-    public void setAirplaneType(AirplaneType airplaneType) { this.airplaneType = airplaneType; }
-
 }

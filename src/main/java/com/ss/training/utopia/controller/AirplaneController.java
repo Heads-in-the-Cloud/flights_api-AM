@@ -1,5 +1,6 @@
 package com.ss.training.utopia.controller;
 
+import com.ss.training.utopia.dto.AirplaneDto;
 import com.ss.training.utopia.entity.Airplane;
 import com.ss.training.utopia.service.AirplaneService;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +29,19 @@ public class AirplaneController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Airplane> getAirplaneById(@PathVariable int id) {
-        return ResponseEntity.of(service.getById(id));
+        return ResponseEntity.of(Optional.ofNullable(service.getById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<Airplane> addAirplane(@RequestBody Airplane airplane) {
-        service.add(airplane);
+    public ResponseEntity<Airplane> addAirplane(@RequestBody AirplaneDto airplaneDto) {
+        Airplane airplane = service.add(airplaneDto);
         URI uri = URI.create("/api/v1/airplanes/" + airplane.getId());
         return ResponseEntity.created(uri).body(airplane);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Airplane> updateAirplane(@RequestBody Airplane airplane) {
-        Optional<Airplane> old = service.getById(airplane.getId());
-        if (old.isEmpty())
-            return ResponseEntity.badRequest().build();
-        service.update(airplane);
+    public ResponseEntity<Airplane> updateAirplane(@RequestBody AirplaneDto airplaneDto) {
+        service.update(airplaneDto);
         return ResponseEntity.noContent().build();
     }
 
@@ -52,5 +50,4 @@ public class AirplaneController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

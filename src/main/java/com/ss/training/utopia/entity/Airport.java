@@ -1,24 +1,28 @@
 package com.ss.training.utopia.entity;
 
+import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
+@Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "airport")
 public class Airport {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(name="iata_id")
     private String id;
 
+    @NotBlank
     @Column(name = "city")
     private String city;
-
-    // GET
-    public String getId() { return id; }
-    public String getCity() { return city; }
-
-    // SET
-    public void setId(String id) { this.id = id; }
-    public void setCity(String city) { this.city = city; }
 }

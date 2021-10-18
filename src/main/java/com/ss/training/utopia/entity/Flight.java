@@ -1,11 +1,19 @@
 package com.ss.training.utopia.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "flight")
 public class Flight {
 
@@ -31,45 +39,4 @@ public class Flight {
 
     @Column(name = "seat_price")
     private Float seatPrice; // seat_price FLOAT
-
-    // GET
-    public Integer getId() {
-        return id;
-    }
-    public Route getRouteId() {
-        return routeId;
-    }
-    public Airplane getAirplane() {
-        return airplane;
-    }
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-    public Integer getReservedSeats() {
-        return reservedSeats;
-    }
-    public Float getSeatPrice() {
-        return seatPrice;
-    }
-
-    // SET
-    public void setId(Integer flightId) {
-        this.id = flightId;
-    }
-    public void setRouteId(Route routeId) {
-        this.routeId = routeId;
-    }
-    public void setAirplane(Airplane airplane) {
-        this.airplane = airplane;
-    }
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-    public void setReservedSeats(Integer reservedSeats) {
-        this.reservedSeats = reservedSeats;
-    }
-    public void setSeatPrice(Float seatPrice) {
-        this.seatPrice = seatPrice;
-    }
-
 }

@@ -1,7 +1,12 @@
 package com.ss.training.utopia.service;
 
+import com.ss.training.utopia.Exception.SQLAlreadyExistsException;
+import com.ss.training.utopia.Exception.SQLDoesNotExistException;
 import com.ss.training.utopia.dao.AirplaneDao;
+import com.ss.training.utopia.dao.AirplaneTypeDao;
+import com.ss.training.utopia.dto.AirplaneDto;
 import com.ss.training.utopia.entity.Airplane;
+import com.ss.training.utopia.entity.AirplaneType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,24 +14,88 @@ import java.util.Optional;
 
 @Service
 public class AirplaneService {
-    // construction
+
+    // vars
     private final AirplaneDao dao;
-    public AirplaneService(AirplaneDao dao) {
+    private final AirplaneTypeDao atdao;
+
+    /**
+     * Constructor
+     * @param dao DAO object to use
+     */
+    public AirplaneService(AirplaneDao dao, AirplaneTypeDao atdao) {
         this.dao = dao;
+        this.atdao = atdao;
     }
 
-    // get all
-    public List<Airplane> getAll() { return dao.findAll(); }
+    /**
+     * Create an Airplane from DTO object
+     * @param dto DTO to construct from
+     * @return the Airplane created
+     */
+    public Airplane dtoToEntity(AirplaneDto dto) {
+        // check airplane type exists for airplane
+        Optional<AirplaneType> type = atdao.findById(dto.getAirplaneType());
+        if (type.isEmpty())
+            throw new SQLDoesNotExistException("Airplane Type", String.valueOf(dto.getId()));
 
-    // get by ID
-    public Optional<Airplane> getById(Integer id) { return dao.findById(id); }
+        // build airplane
+        return Airplane.builder()
+            .id(dto.getId())
+            .airplaneType(type.get())
+            .build();
+    }
 
-    // add
-    public void add(Airplane insert) { dao.save(insert); }
+    /**
+     * Get all Airplanes
+     * @return list of airplanes
+     */
+    public List<Airplane> getAll() {
+        return dao.findAll();
+    }
 
-    // update
-    public void update(Airplane insert) { dao.save(insert); }
+    /**
+     * Get by ID
+     * @param id ID to search for
+     * @return Airplane found
+     */
+    public Airplane getById(Integer id) {
+        Optional<Airplane> airplane = dao.findById(id);
+        if (airplane.isEmpty())
+            throw new SQLDoesNotExistException("Airplane", String.valueOf(id));
+        return airplane.get();
+    }
 
-    // remove
-    public void delete(Integer id) { dao.findById(id).ifPresent(dao::delete); }
+    /**
+     * Insert new Airplane
+     * @param insert airplane to insert
+     */
+    public Airplane add(AirplaneDto insert) {
+        Airplane airplane = dtoToEntity(insert);
+        if (insert.getId() != null && dao.existsById(airplane.getId()))
+            throw new SQLAlreadyExistsException("Airplane", String.valueOf(airplane.getId()));
+        return dao.save(airplane);
+    }
+
+    /**
+     * Update an existing Airplane
+     * @param insert airplane to update
+     */
+    public void update(AirplaneDto insert) {
+        Airplane airplane = dtoToEntity(insert);
+        if (!dao.existsById(airplane.getId()))
+            throw new SQLDoesNotExistException("Airplane", String.valueOf(airplane.getId()));
+        dao.save(airplane);
+    }
+
+    /**
+     * Delete a given Airplane
+     * @param id ID of airplane to delete
+     */
+    public void delete(Integer id) {
+        Optional<Airplane> airplane = dao.findById(id);
+        if (airplane.isEmpty())
+            throw new SQLDoesNotExistException("Airplane", String.valueOf(id));
+        dao.delete(airplane.get());
+    }
 }
