@@ -9,6 +9,7 @@ import com.ss.training.utopia.dto.FlightDto;
 import com.ss.training.utopia.entity.Airplane;
 import com.ss.training.utopia.entity.Flight;
 import com.ss.training.utopia.entity.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
