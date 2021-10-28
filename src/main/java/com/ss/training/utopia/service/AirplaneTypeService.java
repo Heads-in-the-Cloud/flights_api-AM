@@ -51,10 +51,10 @@ public class AirplaneTypeService {
      * @return AirplaneType found
      */
     public AirplaneType getById(Integer id) {
-        Optional<AirplaneType> AirplaneType = dao.findById(id);
-        if (AirplaneType.isEmpty())
+        Optional<AirplaneType> airplaneType = dao.findById(id);
+        if (airplaneType.isEmpty())
             throw new SQLDoesNotExistException("AirplaneType", String.valueOf(id));
-        return AirplaneType.get();
+        return airplaneType.get();
     }
 
     /**
@@ -62,10 +62,10 @@ public class AirplaneTypeService {
      * @param insert AirplaneType to insert
      */
     public AirplaneType add(AirplaneTypeDto insert) {
-        AirplaneType AirplaneType = dtoToEntity(insert);
-        if (insert.getId() != null && dao.existsById(AirplaneType.getId()))
-            throw new SQLAlreadyExistsException("AirplaneType", String.valueOf(AirplaneType.getId()));
-        return dao.save(AirplaneType);
+        AirplaneType airplaneType = dtoToEntity(insert);
+        if (insert.getId() != null && dao.existsById(airplaneType.getId()))
+            throw new SQLAlreadyExistsException("AirplaneType", String.valueOf(airplaneType.getId()));
+        return dao.save(airplaneType);
     }
 
     /**
@@ -73,10 +73,10 @@ public class AirplaneTypeService {
      * @param insert AirplaneType to update
      */
     public void update(AirplaneTypeDto insert) {
-        AirplaneType AirplaneType = dtoToEntity(insert);
-        if (!dao.existsById(AirplaneType.getId()))
-            throw new SQLDoesNotExistException("AirplaneType", String.valueOf(AirplaneType.getId()));
-        dao.save(AirplaneType);
+        AirplaneType airplaneType = dtoToEntity(insert);
+        if (!dao.existsById(airplaneType.getId()))
+            throw new SQLDoesNotExistException("AirplaneType", String.valueOf(airplaneType.getId()));
+        dao.save(airplaneType);
     }
 
     /**
@@ -84,9 +84,9 @@ public class AirplaneTypeService {
      * @param id ID of AirplaneType to delete
      */
     public void delete(Integer id) {
-        Optional<AirplaneType> AirplaneType = dao.findById(id);
-        if (AirplaneType.isEmpty())
+        Optional<AirplaneType> airplaneType = dao.findById(id);
+        if (airplaneType.isEmpty())
             throw new SQLDoesNotExistException("AirplaneType", String.valueOf(id));
-        dao.delete(AirplaneType.get());
+        dao.delete(airplaneType.get());
     }
 }
