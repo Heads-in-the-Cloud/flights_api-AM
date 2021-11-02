@@ -21,6 +21,7 @@ public class RouteService {
 
     /**
      * Constructor
+     *
      * @param dao route Dao to use
      */
     public RouteService(RouteDao dao, AirportDao adao) {
@@ -30,6 +31,7 @@ public class RouteService {
 
     /**
      * Create a Route from DTO object
+     *
      * @param dto DTO to construct from
      * @return the Route created
      */
@@ -52,6 +54,7 @@ public class RouteService {
 
     /**
      * Get all Routes
+     *
      * @return list of routes
      */
     public List<Route> getAll() {
@@ -60,6 +63,7 @@ public class RouteService {
 
     /**
      * Find a route by ID
+     *
      * @param id ID to search by
      * @return Route found
      */
@@ -72,6 +76,7 @@ public class RouteService {
 
     /**
      * Add a route from a DTO
+     *
      * @param insert DTO to insert
      * @return copy of the inserted Route
      */
@@ -84,6 +89,7 @@ public class RouteService {
 
     /**
      * Update an existing Route
+     *
      * @param insert route to update
      */
     public void update(RouteDto insert) {
@@ -95,6 +101,7 @@ public class RouteService {
 
     /**
      * Delete an existing Route
+     *
      * @param id route ID to delete
      */
     public void delete(Integer id) {

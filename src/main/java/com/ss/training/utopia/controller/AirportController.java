@@ -17,7 +17,10 @@ public class AirportController {
 
     // construction
     private final AirportService service;
-    public AirportController(AirportService service) { this.service = service; }
+
+    public AirportController(AirportService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<Airport>> getAllAirports() {

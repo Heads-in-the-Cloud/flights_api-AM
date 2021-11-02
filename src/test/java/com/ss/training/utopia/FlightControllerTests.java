@@ -18,6 +18,6 @@ class FlightControllerTests {
     @Test
     void testFlightsGetAll() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/flights"))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

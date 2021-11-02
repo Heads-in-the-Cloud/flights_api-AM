@@ -16,7 +16,10 @@ public class AirplaneTypeController {
 
     // construction
     private final AirplaneTypeService service;
-    public AirplaneTypeController(AirplaneTypeService service) { this.service = service; }
+
+    public AirplaneTypeController(AirplaneTypeService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<AirplaneType>> getAllAirplaneTypes() {

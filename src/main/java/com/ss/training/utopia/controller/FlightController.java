@@ -16,6 +16,7 @@ public class FlightController {
 
     // construction
     private final FlightService service;
+
     public FlightController(FlightService service) {
         this.service = service;
     }

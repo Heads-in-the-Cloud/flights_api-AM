@@ -18,6 +18,7 @@ public class AirportService {
 
     /**
      * Constructor
+     *
      * @param dao the Airport dao to use
      */
     public AirportService(AirportDao dao) {
@@ -26,6 +27,7 @@ public class AirportService {
 
     /**
      * Converts a DTO object to an Entity
+     *
      * @param dto DTO object to convert
      * @return the resulting airport object
      */
@@ -38,6 +40,7 @@ public class AirportService {
 
     /**
      * Get all Airports
+     *
      * @return list of airports
      */
     public List<Airport> getAll() {
@@ -46,6 +49,7 @@ public class AirportService {
 
     /**
      * Insert a new Airport
+     *
      * @param insert Airport object to insert
      * @return Copy of inserted object
      */
@@ -58,6 +62,7 @@ public class AirportService {
 
     /**
      * Find airport by ID
+     *
      * @param iata_id ID to search for
      * @return Optional Airport result
      */
@@ -70,6 +75,7 @@ public class AirportService {
 
     /**
      * Update an existing airport
+     *
      * @param insert Airport object to update with
      */
     public void update(AirportDto insert) {
@@ -81,6 +87,7 @@ public class AirportService {
 
     /**
      * Delete an airport
+     *
      * @param iata_id ID to delete
      */
     public void delete(String iata_id) {

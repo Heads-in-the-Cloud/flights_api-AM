@@ -19,7 +19,7 @@ public class Airport {
 
     @Id
     @NotNull
-    @Column(name="iata_id")
+    @Column(name = "iata_id")
     private String id;
 
     @NotBlank

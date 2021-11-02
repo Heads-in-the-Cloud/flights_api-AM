@@ -25,7 +25,8 @@ public class FlightService {
 
     /**
      * Constructor
-     * @param dao main DAO for Flights
+     *
+     * @param dao  main DAO for Flights
      * @param rdao child DAO for Routes
      * @param adao child DAO for Airplanes
      */
@@ -37,6 +38,7 @@ public class FlightService {
 
     /**
      * Create a Flight from DTO object
+     *
      * @param dto DTO to construct from
      * @return Flight created
      */
@@ -62,6 +64,7 @@ public class FlightService {
 
     /**
      * Get all Flights
+     *
      * @return list of flights
      */
     public List<Flight> getAll() {
@@ -70,6 +73,7 @@ public class FlightService {
 
     /**
      * Find flight by ID
+     *
      * @param id ID to search by
      * @return Flight found
      */
@@ -82,6 +86,7 @@ public class FlightService {
 
     /**
      * Add a flight from a DTO
+     *
      * @param insert DTO to insert
      * @return copy of the inserted Flight
      */
@@ -94,6 +99,7 @@ public class FlightService {
 
     /**
      * Update a flight
+     *
      * @param insert DTO to update with
      */
     public void update(FlightDto insert) {
@@ -105,6 +111,7 @@ public class FlightService {
 
     /**
      * Delete an existing Flight
+     *
      * @param id ID of flight to remove
      */
     public void delete(Integer id) {

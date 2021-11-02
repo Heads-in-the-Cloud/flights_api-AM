@@ -18,6 +18,7 @@ public class AirplaneTypeService {
 
     /**
      * Constructor
+     *
      * @param dao DAO object to use
      */
     public AirplaneTypeService(AirplaneTypeDao dao) {
@@ -26,6 +27,7 @@ public class AirplaneTypeService {
 
     /**
      * Create an AirplaneType from DTO object
+     *
      * @param dto DTO to construct from
      * @return the AirplaneType created
      */
@@ -39,6 +41,7 @@ public class AirplaneTypeService {
 
     /**
      * Get all AirplaneTypes
+     *
      * @return list of AirplaneTypes
      */
     public List<AirplaneType> getAll() {
@@ -47,6 +50,7 @@ public class AirplaneTypeService {
 
     /**
      * Get by ID
+     *
      * @param id ID to search for
      * @return AirplaneType found
      */
@@ -59,6 +63,7 @@ public class AirplaneTypeService {
 
     /**
      * Insert new AirplaneType
+     *
      * @param insert AirplaneType to insert
      */
     public AirplaneType add(AirplaneTypeDto insert) {
@@ -70,6 +75,7 @@ public class AirplaneTypeService {
 
     /**
      * Update an existing AirplaneType
+     *
      * @param insert AirplaneType to update
      */
     public void update(AirplaneTypeDto insert) {
@@ -81,6 +87,7 @@ public class AirplaneTypeService {
 
     /**
      * Delete a given AirplaneType
+     *
      * @param id ID of AirplaneType to delete
      */
     public void delete(Integer id) {

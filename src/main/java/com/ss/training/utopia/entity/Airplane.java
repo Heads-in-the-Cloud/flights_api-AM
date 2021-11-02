@@ -21,6 +21,6 @@ public class Airplane {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name="type_id")
+    @JoinColumn(name = "type_id")
     private AirplaneType airplaneType;
 }
