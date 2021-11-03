@@ -15,12 +15,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            // enable settings
             .cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+            // add custom filter
             .and()
             .addFilter(new AuthenticationFilter(authenticationManagerBean()))
 
+            // set authorization
             .authorizeRequests()
             .antMatchers("/api/v1/flights/**").hasRole("ADMIN")
             .antMatchers("/api/v1/**").authenticated();
