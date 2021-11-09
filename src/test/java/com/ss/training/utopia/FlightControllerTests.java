@@ -8,16 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 class FlightControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    void testFlightsGetAll() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/flights"))
-            .andExpect(MockMvcResultMatchers.status().isOk());
-    }
 }
