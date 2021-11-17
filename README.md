@@ -10,7 +10,7 @@ These variables must also be passed as environment variables to any Docker conta
 
 ## Docker
 
-This code is compiled into a Docker image held at amattsonsm/booking-api
+This code is compiled into a Docker image held at amattsonsm/flights-api
 
 ## API
 
