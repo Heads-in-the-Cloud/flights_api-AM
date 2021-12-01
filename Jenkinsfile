@@ -1,17 +1,18 @@
 pipeline {
     agent any
+
     stages {
         stage('Initialize') {
             steps {
                 echo 'Guarantee integrity'
-                ls
-                pwd
+                sh 'ls'
+                sh 'pwd'
             }
         }
         stage('Build') {
             steps {
                 echo 'Attempting to build Docker image'
-                docker build -t flights-api-am .
+                sh 'docker build -t flights-api-am .'
             }
         }
         stage('Test') {
@@ -22,8 +23,8 @@ pipeline {
         stage('Clean') {
             steps {
                 echo 'Removing created resources'
-                docker images
-                docker rmi flights-api-am
+                sh 'docker images'
+                sh 'docker rmi flights-api-am'
             }
         }
     }
