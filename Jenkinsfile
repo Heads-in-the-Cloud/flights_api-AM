@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Attempting to build Docker image'
-                sh 'docker build -t flights-api-am .'
+                sh 'docker build -t amattsonsm/flights-api .'
             }
         }
         stage('Test') {
