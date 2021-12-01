@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Initialize') {
+        stage('System information') {
             steps {
-                echo 'Guarantee integrity'
+                echo 'Printing useful info'
                 sh 'ls'
                 sh 'pwd'
             }
