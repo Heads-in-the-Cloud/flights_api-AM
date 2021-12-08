@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         commit = sh(returnStdout: true, script: "git rev-parse --short=8 HEAD").trim()
+        aws-region = "us-west-2"
+        aws-ecr-repo = "026390315914"
+        repo-name = "am-flights-api"
     }
 
     stages {
@@ -16,31 +19,31 @@ pipeline {
         stage('AWS') {
             steps {
                 echo 'logging in via AWS client'
-                sh 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 026390315914.dkr.ecr.us-west-2.amazonaws.com'
+                sh 'aws ecr get-login-password --region ${aws-region} | docker login --username AWS --password-stdin ${aws-ecr-repo}.dkr.ecr.${aws-region}.amazonaws.com'
             }
         }
         stage('Build') {
             steps {
                 echo 'Building Docker image'
-                sh 'docker build -t am-flights-api .'
+                sh 'docker build -t ${repo-name} .'
             }
         }
         stage('Push Images') {
             steps {
                 echo 'Tagging images'
-                sh 'docker tag am-flights-api:latest 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:latest'
-                sh 'docker tag am-flights-api:latest 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:${commit}'
+                sh 'docker tag ${repo-name}:latest ${aws-ecr-repo}.dkr.ecr.${aws-region}.amazonaws.com/${repo-name}:latest'
+                sh 'docker tag ${repo-name}:latest ${aws-ecr-repo}.dkr.ecr.${aws-region}.amazonaws.com/${repo-name}:${commit}'
                 echo 'Pushing images'
-                sh 'docker push 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:latest'
-                sh 'docker push 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:${commit}'
+                sh 'docker push ${aws-ecr-repo}.dkr.ecr.${aws-region}.amazonaws.com/${repo-name}:latest'
+                sh 'docker push ${aws-ecr-repo}.dkr.ecr.${aws-region}.amazonaws.com/${repo-name}:${commit}'
             }
         }
         stage('Cleanup') {
             steps {
                 echo 'Removing images'
-                sh 'docker rmi am-flights-api:latest'
-                sh 'docker rmi 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:latest'
-                sh 'docker rmi 026390315914.dkr.ecr.us-west-2.amazonaws.com/am-flights-api:${commit}'
+                sh 'docker rmi ${repo-name}:latest'
+                sh 'docker rmi ${aws-ecr-repo}.dkr.ecr.us-west-2.amazonaws.com/${repo-name}:latest'
+                sh 'docker rmi ${aws-ecr-repo}.dkr.ecr.us-west-2.amazonaws.com/${repo-name}:${commit}'
             }
         }
     }
