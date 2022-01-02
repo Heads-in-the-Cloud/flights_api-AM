@@ -22,8 +22,8 @@ public class FlightController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<Void> healthCheck() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Healthy");
     }
 
     @GetMapping
