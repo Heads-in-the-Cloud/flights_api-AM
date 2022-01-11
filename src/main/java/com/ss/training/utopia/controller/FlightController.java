@@ -21,11 +21,6 @@ public class FlightController {
         this.service = service;
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("Healthy");
-    }
-
     @GetMapping
     public ResponseEntity<List<Flight>> getAllFlights() {
         List<Flight> flights = service.getAll();
