@@ -19,6 +19,7 @@ pipeline {
             steps {
                 echo 'Building Docker image'
                 sh 'docker context use default'
+                sh 'mvn -f pom.xml clean package'
                 sh 'docker build -t ${repo_name} .'
             }
         }
