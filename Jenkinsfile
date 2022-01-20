@@ -6,6 +6,7 @@ pipeline {
         aws_region = 'us-west-2'
         aws_ecr_repo = '026390315914'
         repo_name = 'am-flights-api'
+        jar_name = 'utopia-0.0.1-SNAPSHOT.jar'
     }
 
     stages {
