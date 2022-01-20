@@ -21,7 +21,7 @@ pipeline {
                 echo 'Building Docker image'
                 sh 'docker context use default'
                 sh 'mvn -f pom.xml clean package'
-                sh 'docker build -t ${repo_name} .'
+                sh 'docker build --build-args jar_name=${jar_name} -t ${repo_name} .'
             }
         }
         stage('Push Images') {
