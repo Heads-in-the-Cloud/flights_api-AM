@@ -39,20 +39,20 @@ public class AirportController {
         return ResponseEntity.created(uri).body(airport);
     }
 
-    @GetMapping("/{iata_id}")
-    public ResponseEntity<Airport> getAirportById(@PathVariable String iata_id) {
-        return ResponseEntity.of(Optional.ofNullable(service.getById(iata_id)));
+    @GetMapping("/{iataId}")
+    public ResponseEntity<Airport> getAirportById(@PathVariable String iataId) {
+        return ResponseEntity.of(Optional.ofNullable(service.getById(iataId)));
     }
 
-    @PutMapping("/{iata_id}")
+    @PutMapping("/{iataId}")
     public ResponseEntity<Airport> updateAirport(@RequestBody AirportDto airportDto) {
         service.update(airportDto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{iata_id}")
-    public ResponseEntity<Void> deleteAirport(@PathVariable String iata_id) {
-        service.delete(iata_id);
+    @DeleteMapping("/{iataId}")
+    public ResponseEntity<Void> deleteAirport(@PathVariable String iataId) {
+        service.delete(iataId);
         return ResponseEntity.noContent().build();
     }
 }

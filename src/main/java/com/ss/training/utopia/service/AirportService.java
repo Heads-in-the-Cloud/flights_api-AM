@@ -1,7 +1,7 @@
 package com.ss.training.utopia.service;
 
-import com.ss.training.utopia.Exception.SQLAlreadyExistsException;
-import com.ss.training.utopia.Exception.SQLDoesNotExistException;
+import com.ss.training.utopia.exception.SQLAlreadyExistsException;
+import com.ss.training.utopia.exception.SQLDoesNotExistException;
 import com.ss.training.utopia.dao.AirportDao;
 import com.ss.training.utopia.dto.AirportDto;
 import com.ss.training.utopia.entity.Airport;
@@ -65,13 +65,13 @@ public class AirportService {
     /**
      * Find airport by ID
      *
-     * @param iata_id ID to search for
+     * @param iataId ID to search for
      * @return Optional Airport result
      */
-    public Airport getById(String iata_id) {
-        Optional<Airport> airport = dao.findById(iata_id);
+    public Airport getById(String iataId) {
+        Optional<Airport> airport = dao.findById(iataId);
         if (airport.isEmpty())
-            throw new SQLDoesNotExistException(objectType, iata_id);
+            throw new SQLDoesNotExistException(objectType, iataId);
         return airport.get();
     }
 
@@ -90,12 +90,12 @@ public class AirportService {
     /**
      * Delete an airport
      *
-     * @param iata_id ID to delete
+     * @param iataId ID to delete
      */
-    public void delete(String iata_id) {
-        Optional<Airport> airport = dao.findById(iata_id);
+    public void delete(String iataId) {
+        Optional<Airport> airport = dao.findById(iataId);
         if (airport.isEmpty())
-            throw new SQLDoesNotExistException(objectType, iata_id);
+            throw new SQLDoesNotExistException(objectType, iataId);
         dao.delete(airport.get());
     }
 
