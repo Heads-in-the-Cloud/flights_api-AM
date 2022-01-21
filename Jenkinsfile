@@ -7,6 +7,7 @@ pipeline {
         aws_ecr_repo = "${sh(script:'aws sts get-caller-identity --query "Account" --output text', returnStdout: true).trim()}"
         repo_name = 'am-flights-api'
         jar_name = 'utopia-0.0.1-SNAPSHOT.jar'
+        sonarRunner = tool name: 'SonarQubeScanner-4.6.2'
     }
 
     stages {
@@ -16,11 +17,33 @@ pipeline {
                 sh 'aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repo}.dkr.ecr.${aws_region}.amazonaws.com'
             }
         }
+        stage('Package') {
+            steps {
+                echo 'Cleaning Maven package'
+                sh 'docker context use default'
+                sh 'mvn -f pom.xml clean package'
+            }
+        }
+        stage('SonarQube') {
+            steps {
+                echo 'Running SonarQube Quality Analysis'
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                       ${sonarRunner}/bin/sonar-scanner \
+                       -Dsonar.projectKey=AM-flights-api \
+                       -Dsonar.sources=./src/main/java/com/ss/training/utopia \
+                       -Dsonar.java.binaries=./target/classes/com/ss/training/utopia
+                    """
+                }
+                timeout(time: 15, unit: 'MINUTES') {
+                sleep(10)
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building Docker image'
-                sh 'docker context use default'
-                sh 'mvn -f pom.xml clean package'
                 sh 'docker build --build-arg jar_name=${jar_name} -t ${repo_name} .'
             }
         }
