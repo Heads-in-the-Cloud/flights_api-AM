@@ -18,6 +18,7 @@ public class RouteService {
     // vars
     private final RouteDao dao;
     private final AirportDao adao;
+    private final String objectType;
 
     /**
      * Constructor
@@ -27,6 +28,7 @@ public class RouteService {
     public RouteService(RouteDao dao, AirportDao adao) {
         this.dao = dao;
         this.adao = adao;
+        objectType = "Route";
     }
 
     /**
@@ -70,7 +72,7 @@ public class RouteService {
     public Route getById(Integer id) {
         Optional<Route> route = dao.findById(id);
         if (route.isEmpty())
-            throw new SQLDoesNotExistException("Route", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         return route.get();
     }
 
@@ -83,7 +85,7 @@ public class RouteService {
     public Route add(RouteDto insert) {
         Route route = dtoToEntity(insert);
         if (route.getId() != null && dao.existsById(route.getId()))
-            throw new SQLAlreadyExistsException("Route", String.valueOf(route.getId()));
+            throw new SQLAlreadyExistsException(objectType, String.valueOf(route.getId()));
         return dao.save(route);
     }
 
@@ -95,7 +97,7 @@ public class RouteService {
     public void update(RouteDto insert) {
         Route route = dtoToEntity(insert);
         if (!dao.existsById(route.getId()))
-            throw new SQLDoesNotExistException("Route", String.valueOf(route.getId()));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(route.getId()));
         dao.save(route);
     }
 
@@ -107,7 +109,7 @@ public class RouteService {
     public void delete(Integer id) {
         Optional<Route> route = dao.findById(id);
         if (route.isEmpty())
-            throw new SQLDoesNotExistException("Route", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         dao.delete(route.get());
     }
 }

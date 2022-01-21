@@ -15,6 +15,7 @@ public class AirplaneTypeService {
 
     // vars
     private final AirplaneTypeDao dao;
+    private final String objectType;
 
     /**
      * Constructor
@@ -23,6 +24,7 @@ public class AirplaneTypeService {
      */
     public AirplaneTypeService(AirplaneTypeDao dao) {
         this.dao = dao;
+        objectType = "AirplaneType";
     }
 
     /**
@@ -57,7 +59,7 @@ public class AirplaneTypeService {
     public AirplaneType getById(Integer id) {
         Optional<AirplaneType> airplaneType = dao.findById(id);
         if (airplaneType.isEmpty())
-            throw new SQLDoesNotExistException("AirplaneType", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         return airplaneType.get();
     }
 
@@ -69,7 +71,7 @@ public class AirplaneTypeService {
     public AirplaneType add(AirplaneTypeDto insert) {
         AirplaneType airplaneType = dtoToEntity(insert);
         if (insert.getId() != null && dao.existsById(airplaneType.getId()))
-            throw new SQLAlreadyExistsException("AirplaneType", String.valueOf(airplaneType.getId()));
+            throw new SQLAlreadyExistsException(objectType, String.valueOf(airplaneType.getId()));
         return dao.save(airplaneType);
     }
 
@@ -81,7 +83,7 @@ public class AirplaneTypeService {
     public void update(AirplaneTypeDto insert) {
         AirplaneType airplaneType = dtoToEntity(insert);
         if (!dao.existsById(airplaneType.getId()))
-            throw new SQLDoesNotExistException("AirplaneType", String.valueOf(airplaneType.getId()));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(airplaneType.getId()));
         dao.save(airplaneType);
     }
 
@@ -93,7 +95,7 @@ public class AirplaneTypeService {
     public void delete(Integer id) {
         Optional<AirplaneType> airplaneType = dao.findById(id);
         if (airplaneType.isEmpty())
-            throw new SQLDoesNotExistException("AirplaneType", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         dao.delete(airplaneType.get());
     }
 }

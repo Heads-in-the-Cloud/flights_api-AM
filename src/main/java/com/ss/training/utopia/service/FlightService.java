@@ -9,7 +9,6 @@ import com.ss.training.utopia.dto.FlightDto;
 import com.ss.training.utopia.entity.Airplane;
 import com.ss.training.utopia.entity.Flight;
 import com.ss.training.utopia.entity.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +21,7 @@ public class FlightService {
     private final FlightDao dao;
     private final AirplaneDao adao;
     private final RouteDao rdao;
+    private final String objectType;
 
     /**
      * Constructor
@@ -34,6 +34,7 @@ public class FlightService {
         this.dao = dao;
         this.adao = adao;
         this.rdao = rdao;
+        objectType = "Flight";
     }
 
     /**
@@ -80,7 +81,7 @@ public class FlightService {
     public Flight getById(Integer id) {
         Optional<Flight> flight = dao.findById(id);
         if (flight.isEmpty())
-            throw new SQLDoesNotExistException("Flight", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         return flight.get();
     }
 
@@ -93,7 +94,7 @@ public class FlightService {
     public Flight add(FlightDto insert) {
         Flight flight = dtoToEntity(insert);
         if (flight.getId() != null && dao.existsById(flight.getId()))
-            throw new SQLAlreadyExistsException("Flight", String.valueOf(flight.getId()));
+            throw new SQLAlreadyExistsException(objectType, String.valueOf(flight.getId()));
         return dao.save(flight);
     }
 
@@ -105,7 +106,7 @@ public class FlightService {
     public void update(FlightDto insert) {
         Flight flight = dtoToEntity(insert);
         if (!dao.existsById(flight.getId()))
-            throw new SQLDoesNotExistException("Flight", String.valueOf(flight.getId()));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(flight.getId()));
         dao.save(flight);
     }
 

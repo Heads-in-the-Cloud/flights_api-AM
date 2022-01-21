@@ -18,6 +18,7 @@ public class AirplaneService {
     // vars
     private final AirplaneDao dao;
     private final AirplaneTypeDao atdao;
+    private final String objectType;
 
     /**
      * Constructor
@@ -27,6 +28,7 @@ public class AirplaneService {
     public AirplaneService(AirplaneDao dao, AirplaneTypeDao atdao) {
         this.dao = dao;
         this.atdao = atdao;
+        objectType = "Airplane";
     }
 
     /**
@@ -66,7 +68,7 @@ public class AirplaneService {
     public Airplane getById(Integer id) {
         Optional<Airplane> airplane = dao.findById(id);
         if (airplane.isEmpty())
-            throw new SQLDoesNotExistException("Airplane", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         return airplane.get();
     }
 
@@ -78,7 +80,7 @@ public class AirplaneService {
     public Airplane add(AirplaneDto insert) {
         Airplane airplane = dtoToEntity(insert);
         if (insert.getId() != null && dao.existsById(airplane.getId()))
-            throw new SQLAlreadyExistsException("Airplane", String.valueOf(airplane.getId()));
+            throw new SQLAlreadyExistsException(objectType, String.valueOf(airplane.getId()));
         return dao.save(airplane);
     }
 
@@ -90,7 +92,7 @@ public class AirplaneService {
     public void update(AirplaneDto insert) {
         Airplane airplane = dtoToEntity(insert);
         if (!dao.existsById(airplane.getId()))
-            throw new SQLDoesNotExistException("Airplane", String.valueOf(airplane.getId()));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(airplane.getId()));
         dao.save(airplane);
     }
 
@@ -102,7 +104,7 @@ public class AirplaneService {
     public void delete(Integer id) {
         Optional<Airplane> airplane = dao.findById(id);
         if (airplane.isEmpty())
-            throw new SQLDoesNotExistException("Airplane", String.valueOf(id));
+            throw new SQLDoesNotExistException(objectType, String.valueOf(id));
         dao.delete(airplane.get());
     }
 }

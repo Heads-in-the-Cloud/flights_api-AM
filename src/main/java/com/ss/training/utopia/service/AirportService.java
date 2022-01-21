@@ -15,6 +15,7 @@ public class AirportService {
 
     // vars
     private final AirportDao dao;
+    private final String objectType;
 
     /**
      * Constructor
@@ -23,6 +24,7 @@ public class AirportService {
      */
     public AirportService(AirportDao dao) {
         this.dao = dao;
+        objectType = "Airport";
     }
 
     /**
@@ -56,7 +58,7 @@ public class AirportService {
     public Airport add(AirportDto insert) {
         Airport airport = dtoToEntity(insert);
         if (dao.existsById(insert.getIataId()))
-            throw new SQLAlreadyExistsException("Airport", airport.getId());
+            throw new SQLAlreadyExistsException(objectType, airport.getId());
         return dao.save(airport);
     }
 
@@ -69,7 +71,7 @@ public class AirportService {
     public Airport getById(String iata_id) {
         Optional<Airport> airport = dao.findById(iata_id);
         if (airport.isEmpty())
-            throw new SQLDoesNotExistException("Airport", iata_id);
+            throw new SQLDoesNotExistException(objectType, iata_id);
         return airport.get();
     }
 
@@ -81,7 +83,7 @@ public class AirportService {
     public void update(AirportDto insert) {
         Airport airport = dtoToEntity(insert);
         if (!dao.existsById(airport.getId()))
-            throw new SQLDoesNotExistException("Airport", airport.getId());
+            throw new SQLDoesNotExistException(objectType, airport.getId());
         dao.save(airport);
     }
 
@@ -93,7 +95,7 @@ public class AirportService {
     public void delete(String iata_id) {
         Optional<Airport> airport = dao.findById(iata_id);
         if (airport.isEmpty())
-            throw new SQLDoesNotExistException("Airport", iata_id);
+            throw new SQLDoesNotExistException(objectType, iata_id);
         dao.delete(airport.get());
     }
 
