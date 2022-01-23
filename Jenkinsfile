@@ -57,12 +57,20 @@ pipeline {
                 sh 'docker push ${aws_ecr_repo}.dkr.ecr.${aws_region}.amazonaws.com/${repo_name}:${commit}'
             }
         }
-        stage('Cleanup') {
+        stage('Clean Images') {
             steps {
                 echo 'Removing images'
                 sh 'docker rmi ${repo_name}:latest'
                 sh 'docker rmi ${aws_ecr_repo}.dkr.ecr.us-west-2.amazonaws.com/${repo_name}:latest'
                 sh 'docker rmi ${aws_ecr_repo}.dkr.ecr.us-west-2.amazonaws.com/${repo_name}:${commit}'
+            }
+        }
+        stage('ECS Update') {
+            steps {
+                echo 'Attempting to update ECS Deployment data'
+                dir("$AM_RESOURCES_DIRECTORY") {
+                    sh "jq '.flights = "${commit}"' images.json > tmp.$$.json && mv tmp.$$.json images.json"
+                }
             }
         }
     }
