@@ -69,7 +69,7 @@ pipeline {
             steps {
                 echo 'Attempting to update ECS Deployment data'
                 dir("$AM_RESOURCES_DIRECTORY") {
-                    sh "jq '.flights = "${commit}"' images.json > tmp.$$.json && mv tmp.$$.json images.json"
+                    sh "jq '.flights = \"${commit}\"' images.json > tmp.$$.json && mv tmp.$$.json images.json"
                 }
             }
         }
