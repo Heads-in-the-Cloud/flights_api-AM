@@ -7,10 +7,13 @@ pipeline {
         API_REPO_NAME   = 'am-flights-api'
         JARFILE_NAME    = 'utopia-0.0.1-SNAPSHOT.jar'
         SONARQUBE_ID    = tool name: 'SonarQubeScanner-4.6.2'
+        DEPLOY_MODE     = "${AM_DEPLOYMENT_ENVIRONMENT}"
 
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
-        SECRET_ID_PUSH  = "${AM_SECRET_ID_PUSH}"
+        SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
+        SECRET_PULL     = credentials("AM_SECRET_PULL_ID_${DEPLOY_MODE}")
+        SECRET_ID_PUSH  = "${DEPLOY_MODE}/${SECRET_BASE}-${SECRET_PULL}"
     }
 
     stages {
@@ -51,6 +54,7 @@ pipeline {
                 sh 'docker build --build-arg jar_name=${JARFILE_NAME} -t ${API_REPO_NAME} .'
             }
         }
+
         stage('Push Images') {
             steps {
                 echo 'Tagging images'
@@ -61,6 +65,7 @@ pipeline {
                 sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:${COMMIT_HASH}'
             }
         }
+
         stage('Clean Images') {
             steps {
                 echo 'Removing images'
