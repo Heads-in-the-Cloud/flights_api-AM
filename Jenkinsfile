@@ -10,10 +10,11 @@ pipeline {
 
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
-        DEPLOY_MODE     = "prod"
+        DEPLOY_MODE     = "${AM_DEPLOY_ENV}"
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
         SECRET_PULL     = credentials("AM_SECRET_PULL_ID_${DEPLOY_MODE}")
-        SECRET_ID_PUSH  = "${DEPLOY_MODE}/${SECRET_BASE}-${SECRET_PULL}"
+        SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
+        SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
     }
 
     stages {
@@ -74,7 +75,7 @@ pipeline {
                 sh 'docker rmi ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:${COMMIT_HASH}'
             }
         }
-        stage('EKS Update') {
+        stage('Secrets Update') {
             steps {
                 echo 'Configuring Profile and Region'
                 sh 'aws configure set region ${AWS_REGION_ID} --profile ${AWS_PROFILE_NAME}'
@@ -82,7 +83,7 @@ pipeline {
                 echo 'Writing output to Secrets'
                 script {
                     // get secret
-                    secret = sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id ${AM_SECRET_ID} | jq -Mr \'.SecretString\'').trim()
+                    secret = sh(returnStdout: true, script: 'aws secretsmanager get-secret-value --secret-id ${SECRET_ID} | jq -Mr \'.SecretString\'').trim()
                     def jsonObj = readJSON text: secret
 
                     // update secret
