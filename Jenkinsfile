@@ -7,7 +7,7 @@ pipeline {
         API_REPO_NAME   = 'am-flights-api'
         JARFILE_NAME    = 'utopia-0.0.1-SNAPSHOT.jar'
         SONARQUBE_ID    = tool name: 'SonarQubeScanner-4.6.2'
-        DEPLOY_MODE     = "${AM_DEPLOYMENT_ENVIRONMENT}"
+        DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
 
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
