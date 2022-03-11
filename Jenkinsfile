@@ -10,8 +10,7 @@ pipeline {
 
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
-        TESTVAR         = "${THING1}"
-        DEPLOY_MODE     = "${AM_DEPLOY_ENV}"
+        DEPLOY_MODE     = "${THING1}"
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
         SECRET_PULL     = credentials("AM_SECRET_PULL_ID_${DEPLOY_MODE}")
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
