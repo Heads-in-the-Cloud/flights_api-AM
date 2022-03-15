@@ -11,20 +11,39 @@ pipeline {
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
         DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
-        CREDS_NAME      = "AM_SECRET_PULL_ID_${DEPLOY_MODE}"
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
-        SECRET_PULL     = credentials("${CREDS_NAME}")
+        SECRET_PULL     = "NE4x9z"    // TODO: Update
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
         SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
+
+        // Artifact Information
+        CUR_REPO_TYPE   = "ECR"                 // choose: ECR or ART artifact storage types
+        ART_REPO_NAME   = credentials("AM_ARTIFACTORY_ENDPOINT")
+        ART_REPO_LOGIN  = credentials("AM_ARTIFACTORY_LOGIN")
+
+        // Repositories
+        ECR_REPO_LOC    = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}"
+        ART_REPO_LOC    = "${ART_REPO_NAME}/am-flights-api-docker/am-flights-api-docker-local"
+        CUR_REPO_LOC    = "${ECR_REPO_LOC}"     // One of the two above options (ART_REPO_LOC, ECR_REPO_LOC)
     }
 
     stages {
-        stage('AWS') {
+        stage('ECR Login') {
+            when { expression { CUR_REPO_TYPE == 'ECR' } }
             steps {
                 echo 'logging in via AWS client'
                 sh 'aws ecr get-login-password --region ${AWS_REGION_ID} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com'
             }
         }
+
+        stage('Artifactory Login') {
+            when { expression { CUR_REPO_TYPE == 'ART' } }
+            steps {
+                echo 'logging in via docker login'
+                sh 'docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password ${ART_REPO_LOGIN_PSW}'
+            }
+        }
+
         stage('Package') {
             steps {
                 echo 'Cleaning Maven package'
@@ -32,6 +51,7 @@ pipeline {
                 sh 'mvn -f pom.xml clean package'
             }
         }
+
         stage('SonarQube') {
             steps {
                 echo 'Running SonarQube Quality Analysis'
@@ -60,11 +80,11 @@ pipeline {
         stage('Push Images') {
             steps {
                 echo 'Tagging images'
-                sh 'docker tag ${API_REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:latest'
-                sh 'docker tag ${API_REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:${COMMIT_HASH}'
+                sh 'docker tag ${API_REPO_NAME}:latest ${CUR_REPO_LOC}:latest'
+                sh 'docker tag ${API_REPO_NAME}:latest ${CUR_REPO_LOC}:${COMMIT_HASH}'
                 echo 'Pushing images'
-                sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:latest'
-                sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:${COMMIT_HASH}'
+                sh 'docker push ${CUR_REPO_LOC}:latest'
+                sh 'docker push ${CUR_REPO_LOC}:${COMMIT_HASH}'
             }
         }
 
@@ -72,10 +92,11 @@ pipeline {
             steps {
                 echo 'Removing images'
                 sh 'docker rmi ${API_REPO_NAME}:latest'
-                sh 'docker rmi ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:latest'
-                sh 'docker rmi ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}:${COMMIT_HASH}'
+                sh 'docker rmi ${CUR_REPO_LOC}:latest'
+                sh 'docker rmi ${CUR_REPO_LOC}:${COMMIT_HASH}'
             }
         }
+
         stage('Secrets Update') {
             steps {
                 echo 'Configuring Profile and Region'
