@@ -13,6 +13,7 @@ pipeline {
         DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
+        SECRET_PULL_IDS = credentials("AM_SECRETS_PUSH_JSON")
 
         // Artifact Information
         CUR_REPO_TYPE   = "${AM_CURRENT_REPO_TYPE}"
@@ -31,7 +32,7 @@ pipeline {
             steps {
                 echo 'Acquiring correct Secret Pull ID'
                 script {
-                    secret_id = sh(returnStdout: true, script: "echo '${JSON_TEXT}' | jq '.DEV' | sed 's/\"//g'")
+                    secret_id = sh(returnStdout: true, script: "echo '${SECRET_PULL_IDS}' | jq '.DEV' | sed 's/\"//g'")
                     env.SECRET_PULL = secret_id
                     env.SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
                 }
