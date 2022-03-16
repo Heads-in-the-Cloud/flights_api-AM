@@ -17,14 +17,14 @@ pipeline {
         SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
 
         // Artifact Information
-        CUR_REPO_TYPE   = "ECR"                 // choose: ECR or ART artifact storage types
+        CUR_REPO_TYPE   = "ART"                 // choose: ECR or ART artifact storage types
         ART_REPO_NAME   = credentials("AM_ARTIFACTORY_ENDPOINT")
         ART_REPO_LOGIN  = credentials("AM_ARTIFACTORY_LOGIN")
 
         // Repositories
         ECR_REPO_LOC    = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}"
-        ART_REPO_LOC    = "${ART_REPO_NAME}/am-flights-api-docker/am-flights-api-docker-local"
-        CUR_REPO_LOC    = "${ECR_REPO_LOC}"     // One of the two above options (ART_REPO_LOC, ECR_REPO_LOC)
+        ART_REPO_LOC    = "${ART_REPO_NAME}/am-utopia/${API_REPO_NAME}"
+        CUR_REPO_LOC    = "${ART_REPO_LOC}"     // One of the two above options (ART_REPO_LOC, ECR_REPO_LOC)
     }
 
     stages {
@@ -40,7 +40,7 @@ pipeline {
             when { expression { CUR_REPO_TYPE == 'ART' } }
             steps {
                 echo 'logging in via docker login'
-                sh 'docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password ${ART_REPO_LOGIN_PSW}'
+                sh 'echo ${ART_REPO_LOGIN_PSW} | docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password-stdin'
             }
         }
 
