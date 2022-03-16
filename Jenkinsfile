@@ -31,7 +31,6 @@ pipeline {
     }
 
     stages {
-
         stage('ECR Login') {
             when { expression { CUR_REPO_TYPE == 'ECR' } }
             steps {
@@ -121,6 +120,8 @@ pipeline {
                 }
             }
         }
+
+        // end stages
     }
 }
 
