@@ -11,9 +11,11 @@ pipeline {
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
         DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
+        SECRET_PULL     = sh(returnStdout: true, script: "echo '${SECRET_PULL_IDS}' | jq '.DEV' | sed 's/\"//g'")
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
         SECRET_PULL_IDS = credentials("AM_SECRETS_PUSH_JSON")
+        SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
 
         // Artifact Information
         CUR_REPO_TYPE   = "${AM_CURRENT_REPO_TYPE}"
@@ -27,17 +29,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Secrets Setup') {
-            steps {
-                echo 'Acquiring correct Secret Pull ID'
-                script {
-                    secret_id = sh(returnStdout: true, script: "echo '${SECRET_PULL_IDS}' | jq '.DEV' | sed 's/\"//g'")
-                    env.SECRET_PULL = secret_id
-                    env.SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
-                }
-            }
-        }
 
         stage('ECR Login') {
             when { expression { CUR_REPO_TYPE == 'ECR' } }
@@ -55,7 +46,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Package Project') {
             steps {
                 echo 'Cleaning Maven package'
                 sh 'docker context use default'
@@ -63,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube') {
+        stage('SonarQube Quality Gate') {
             steps {
                 echo 'Running SonarQube Quality Analysis'
                 withSonarQubeEnv('SonarQube') {
@@ -81,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Project') {
             steps {
                 echo 'Building Docker image'
                 sh 'docker build --build-arg jar_name=${JARFILE_NAME} -t ${API_REPO_NAME} .'
@@ -108,7 +99,7 @@ pipeline {
             }
         }
 
-        stage('Secrets Update') {
+        stage('Update Secrets') {
             steps {
                 echo 'Configuring Profile and Region'
                 sh 'aws configure set region ${AWS_REGION_ID} --profile ${AWS_PROFILE_NAME}'
