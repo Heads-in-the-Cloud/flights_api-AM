@@ -12,9 +12,7 @@ pipeline {
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
         DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
-        SECRET_PULL     = "NE4x9z"    // TODO: Update
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
-        SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
 
         // Artifact Information
         CUR_REPO_TYPE   = "${AM_CURRENT_REPO_TYPE}"
@@ -28,6 +26,18 @@ pipeline {
     }
 
     stages {
+
+        stage('Secrets Setup') {
+            steps {
+                echo 'Acquiring correct Secret Pull ID'
+                script {
+                    secret_id = sh(returnStdout: true, script: "echo '${JSON_TEXT}' | jq '.DEV' | sed 's/\"//g'")
+                    env.SECRET_PULL = secret_id
+                    env.SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
+                }
+            }
+        }
+
         stage('ECR Login') {
             when { expression { CUR_REPO_TYPE == 'ECR' } }
             steps {
