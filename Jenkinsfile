@@ -2,7 +2,7 @@ pipeline {
     agent { label 'aws-ready' }
 
     environment {
-        // General
+        // General - Maven
         COMMIT_HASH     = sh(returnStdout: true, script: "git rev-parse --short=8 HEAD").trim()
         API_REPO_NAME   = 'am-flights-api'
         JARFILE_NAME    = 'utopia-0.0.1-SNAPSHOT.jar'
@@ -11,10 +11,12 @@ pipeline {
         // AWS Specific
         AWS_PROFILE     = "${AWS_PROFILE_NAME}"
         DEPLOY_MODE     = "${AM_DEPLOY_ENVIRONMENT}"
-        SECRET_PULL     = sh(returnStdout: true, script: "echo '${SECRET_PULL_IDS}' | jq '.DEV' | sed 's/\"//g'")
+
+        // Secrets Manager
+        SECRET_PUSHES   = credentials("AM_SECRETS_PUSH_JSON")
+        SECRET_PULL     = sh(returnStdout: true, script: "echo '${SECRET_PUSHES}' | jq '.DEV' | tr -d '\\n\"'")
         SECRET_BASE     = credentials("AM_SECRET_ID_BASE")
         SECRET_ID       = "${DEPLOY_MODE}/${SECRET_BASE}"
-        SECRET_PULL_IDS = credentials("AM_SECRETS_PUSH_JSON")
         SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
 
         // Artifact Information
