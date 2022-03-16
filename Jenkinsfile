@@ -17,14 +17,14 @@ pipeline {
         SECRET_ID_PUSH  = "${SECRET_ID}-${SECRET_PULL}"
 
         // Artifact Information
-        CUR_REPO_TYPE   = "ART"                 // choose: ECR or ART artifact storage types
+        CUR_REPO_TYPE   = "${AM_CURRENT_REPO_TYPE}"
         ART_REPO_NAME   = credentials("AM_ARTIFACTORY_ENDPOINT")
         ART_REPO_LOGIN  = credentials("AM_ARTIFACTORY_LOGIN")
 
         // Repositories
         ECR_REPO_LOC    = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION_ID}.amazonaws.com/${API_REPO_NAME}"
         ART_REPO_LOC    = "${ART_REPO_NAME}/am-utopia/${API_REPO_NAME}"
-        CUR_REPO_LOC    = "${ART_REPO_LOC}"     // One of the two above options (ART_REPO_LOC, ECR_REPO_LOC)
+        CUR_REPO_LOC    = getRepoLoc(CUR_REPO_TYPE, ECR_REPO_LOC, ART_REPO_LOC)
     }
 
     stages {
@@ -117,5 +117,14 @@ pipeline {
                 }
             }
         }
+    }
+}
+
+// Decide which repo to use based on current type; default to ECR
+def getRepoLoc(repoType, ecrLoc, artLoc) {
+    if(repoType == "ART") {
+        return artLoc
+    } else {
+        return ecrLoc
     }
 }
