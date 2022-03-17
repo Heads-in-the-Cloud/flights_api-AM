@@ -77,18 +77,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <distributionManagement>
-    <repository>
-      <id>central</id>
-      <name>a0qge2r4oeehh-artifactory-primary-0-releases</name>
-      <url>https://amhitwc.jfrog.io/artifactory/am-utopia-maven</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>a0qge2r4oeehh-artifactory-primary-0-snapshots</name>
-      <url>https://amhitwc.jfrog.io/artifactory/am-utopia-maven</url>
-    </snapshotRepository>
-  </distributionManagement>
-
 </project>
